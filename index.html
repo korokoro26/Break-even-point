@@ -2,66 +2,76 @@
 <html lang="ja">
 <head>
   <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no"/>
   <title>損益分岐確認シート</title>
   <style>
     *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
     body {
-      font-family: "Meiryo", "Yu Gothic", sans-serif;
+      font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Hiragino Sans", "Meiryo", sans-serif;
       background: #1a1a2e;
       min-height: 100vh;
-      padding: 20px;
+      padding: 12px;
       color: #333;
+      -webkit-tap-highlight-color: transparent;
     }
     .page-title {
       text-align: center;
       color: #fff;
-      font-size: 1.6rem;
+      font-size: 1.35rem;
       font-weight: bold;
-      margin-bottom: 20px;
-      letter-spacing: 2px;
-      text-shadow: 0 0 20px rgba(100,180,255,0.6);
+      margin: 10px 0 16px;
+      letter-spacing: 1px;
+      text-shadow: 0 0 15px rgba(100,180,255,0.6);
     }
     .card {
       background: #fff;
       border-radius: 12px;
-      box-shadow: 0 8px 32px rgba(0,0,0,0.35);
-      padding: 24px;
-      margin-bottom: 20px;
+      box-shadow: 0 4px 16px rgba(0,0,0,0.25);
+      padding: 16px;
+      margin-bottom: 16px;
     }
     .card-title {
-      font-size: 1.1rem;
+      font-size: 1rem;
       font-weight: bold;
       color: #1a3a6b;
-      border-left: 5px solid #1a3a6b;
-      padding-left: 10px;
-      margin-bottom: 16px;
+      border-left: 4px solid #1a3a6b;
+      padding-left: 8px;
+      margin-bottom: 12px;
     }
     .top-grid {
       display: grid;
       grid-template-columns: 1fr 1fr;
-      gap: 20px;
-      margin-bottom: 20px;
+      gap: 16px;
+      margin-bottom: 16px;
     }
-    @media(max-width:768px){ .top-grid{ grid-template-columns:1fr; } }
+    @media (max-width: 768px) {
+      .top-grid { grid-template-columns: 1fr; }
+    }
     .form-table { width: 100%; border-collapse: collapse; }
-    .form-table tr { border-bottom: 1px solid #e8e8e8; }
+    .form-table tr { border-bottom: 1px solid #f0f0f0; }
     .form-table tr:last-child { border-bottom: none; }
     .form-table td {
-      padding: 9px 6px;
-      font-size: 0.88rem;
+      padding: 8px 4px;
+      font-size: 0.85rem;
       vertical-align: middle;
     }
-    .form-table td:first-child { width: 55%; color: #555; font-weight: 600; }
+    .form-table td:first-child { width: 55%; color: #444; font-weight: 600; }
     .form-table td:last-child  { width: 45%; }
+    
+    .input-wrap {
+      display: flex;
+      align-items: center;
+      gap: 4px;
+    }
     input[type="text"], input[type="number"] {
       width: 100%;
-      padding: 7px 10px;
-      border: 2px solid #ccc;
+      min-height: 40px; /* タップしやすい高さ */
+      padding: 6px 8px;
+      border: 1.5px solid #ccc;
       border-radius: 6px;
-      font-size: 0.9rem;
-      transition: border-color .2s;
+      font-size: 1rem; /* iOSでのズーム防止のため16px以上 */
       background: #fffde7;
+      transition: border-color .2s;
     }
     input[type="text"]:focus, input[type="number"]:focus {
       outline: none;
@@ -69,125 +79,135 @@
       background: #fff9c4;
     }
     .readonly-val { font-weight: bold; color: #1a3a6b; font-size: 0.95rem; }
-    .final-profit { font-size: 1.5rem; font-weight: bold; }
+    .final-profit { font-size: 1.3rem; font-weight: bold; }
+    
     .info-box {
-      background: #f9f9f9;
-      border: 2px solid #ddd;
-      border-radius: 10px;
-      padding: 16px;
-      font-size: 0.85rem;
-      line-height: 1.9;
-      height: 100%;
+      background: #f9fbfd;
+      border: 1px solid #d9e2ec;
+      border-radius: 8px;
+      padding: 12px;
+      font-size: 0.8rem;
+      line-height: 1.7;
     }
-    .info-box h3  { font-size: 0.95rem; margin-bottom: 4px; color: #1a3a6b; }
+    .info-box details summary {
+      font-weight: bold;
+      color: #1a3a6b;
+      cursor: pointer;
+      padding: 4px 0;
+    }
     .info-box .warn  { color: #e53935; font-weight: bold; }
     .info-box .ynote { color: #c8860a; font-weight: bold; }
+
     .btn-calc {
       display: block;
       width: 100%;
-      padding: 13px;
+      padding: 14px;
       background: linear-gradient(135deg, #1a3a6b, #2563b0);
       color: #fff;
-      font-size: 1rem;
+      font-size: 1.05rem;
       font-weight: bold;
       border: none;
       border-radius: 8px;
       cursor: pointer;
+      box-shadow: 0 4px 12px rgba(37,99,176,0.3);
       letter-spacing: 1px;
       transition: opacity .2s, transform .1s;
-      margin-bottom: 20px;
+      margin-bottom: 16px;
+      user-select: none;
     }
-    .btn-calc:hover  { opacity: .88; transform: translateY(-1px); }
-    .btn-calc:active { transform: translateY(0); }
-    .result-table-wrap { overflow-x: auto; }
+    .btn-calc:active { transform: scale(0.98); opacity: 0.9; }
+
+    .result-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 16px;
+    }
+    @media (max-width: 900px) {
+      .result-grid { grid-template-columns: 1fr; }
+    }
+
+    .result-table-wrap {
+      overflow-x: auto;
+      -webkit-overflow-scrolling: touch;
+      border-radius: 6px;
+      border: 1px solid #d0d7de;
+    }
     table.result {
       width: 100%;
       border-collapse: collapse;
-      font-size: 0.82rem;
-      min-width: 480px;
+      font-size: 0.8rem;
+      text-align: center;
     }
     table.result th, table.result td {
-      border: 1px solid #bbb;
-      padding: 6px 8px;
-      text-align: center;
+      border: 1px solid #e1e4e8;
+      padding: 8px 6px;
       white-space: nowrap;
     }
-    table.result thead th { background: #1a3a6b; color: #fff; font-weight: bold; }
+    table.result thead th {
+      background: #1a3a6b;
+      color: #fff;
+      font-weight: bold;
+      position: sticky;
+      top: 0;
+      z-index: 1;
+    }
     table.result thead th.sub-head { background: #2563b0; }
-    table.result tbody tr:nth-child(even) { background: #f0f4ff; }
-    table.result tbody tr:hover { background: #dce8ff; }
+    table.result tbody tr:nth-child(even) { background: #f8fafd; }
+    
     .rc-high { color: #1a3a6b; font-weight: bold; }
     .rc-mid  { color: #e65100; font-weight: bold; }
     .rc-low  { color: #e53935; font-weight: bold; }
     .neg { background: #ffcdd2 !important; color: #b71c1c; font-weight: bold; }
     .pos { color: #1b5e20; }
-    .result-grid {
-      display: grid;
-      grid-template-columns: 1fr 1fr;
-      gap: 20px;
-    }
-    @media(max-width:900px){ .result-grid{ grid-template-columns:1fr; } }
+    
     .section-label {
-      text-align: center;
       font-weight: bold;
-      font-size: 1rem;
+      font-size: 0.95rem;
       color: #1a3a6b;
       margin-bottom: 8px;
     }
     table.result tfoot td {
-      background: #e8eaf6;
+      background: #edf2f7;
       font-weight: bold;
-      font-size: 0.78rem;
+      font-size: 0.75rem;
     }
     table.result tfoot .neg-foot { background: #ffcdd2 !important; color: #b71c1c; }
     .formula-note {
-      font-size: 0.75rem;
-      color: #888;
-      margin-top: 8px;
+      font-size: 0.72rem;
+      color: #777;
+      margin-top: 6px;
       text-align: right;
     }
-    .has-tip { cursor: help; }
-    .has-tip:hover { text-decoration: underline dotted #555; }
+
+    /* ポップアップ／ツールチップ（スマホ最適化） */
     #globalTip {
       display: none;
       position: fixed;
       z-index: 99999;
-      min-width: 260px;
-      max-width: 340px;
       background: #1e2a3a;
       color: #e8f0fe;
       border-radius: 10px;
-      padding: 10px 14px;
+      padding: 12px;
       font-size: 0.78rem;
-      line-height: 1.7;
-      box-shadow: 0 6px 24px rgba(0,0,0,0.55);
-      pointer-events: none;
-      white-space: normal;
-      text-align: left;
+      line-height: 1.6;
+      box-shadow: 0 8px 24px rgba(0,0,0,0.6);
+      pointer-events: auto;
+      max-width: 90vw;
     }
-    #globalTip.arrow-bottom::after {
-      content: '';
-      position: absolute;
-      top: 100%;
-      left: 50%;
-      transform: translateX(-50%);
-      border: 7px solid transparent;
-      border-top-color: #1e2a3a;
-    }
-    #globalTip.arrow-top::before {
-      content: '';
-      position: absolute;
-      bottom: 100%;
-      left: 50%;
-      transform: translateX(-50%);
-      border: 7px solid transparent;
-      border-bottom-color: #1e2a3a;
+    @media (max-width: 600px) {
+      #globalTip {
+        left: 5vw !important;
+        right: 5vw !important;
+        bottom: 20px !important;
+        top: auto !important;
+        width: 90vw;
+      }
     }
     .tip-title {
-      font-size: 0.82rem;
+      font-size: 0.85rem;
       font-weight: bold;
       color: #90caf9;
-      margin-bottom: 5px;
+      margin-bottom: 6px;
       border-bottom: 1px solid #2e4a6a;
       padding-bottom: 4px;
     }
@@ -195,10 +215,10 @@
       display: flex;
       justify-content: space-between;
       gap: 8px;
-      padding: 1px 0;
+      padding: 2px 0;
     }
-    .tip-label { color: #b0bec5; flex-shrink: 0; }
-    .tip-val   { color: #fff; font-weight: bold; text-align: right; }
+    .tip-label { color: #b0bec5; }
+    .tip-val   { color: #fff; font-weight: bold; }
     .tip-formula {
       margin-top: 6px;
       padding-top: 5px;
@@ -210,107 +230,111 @@
       margin-top: 4px;
       color: #ffcc80;
       font-weight: bold;
-      font-size: 0.82rem;
     }
     .tip-deduct {
       margin-top: 3px;
       color: #ef9a9a;
       font-size: 0.75rem;
     }
+    .tip-close {
+      display: none;
+      text-align: right;
+      color: #90caf9;
+      font-weight: bold;
+      margin-top: 6px;
+      cursor: pointer;
+    }
+    @media (max-width: 600px) {
+      .tip-close { display: block; }
+    }
   </style>
 </head>
 <body>
 
-<div id="globalTip"></div>
+<div id="globalTip">
+  <div id="tipContent"></div>
+  <div class="tip-close" onclick="hideTip()">閉じる [✕]</div>
+</div>
+
 <div class="page-title">📊 損益分岐確認シート</div>
 
 <div class="top-grid">
   <div class="card">
-    <div class="card-title">🟡 基本情報入力（黄色セルを編集）</div>
+    <div class="card-title">🟡 基本情報入力</div>
     <table class="form-table">
       <tr>
         <td>商品名</td>
-        <td><input type="text" id="productName" value="" /></td>
+        <td><input type="text" id="productName" value="" placeholder="商品名" /></td>
       </tr>
       <tr>
-        <td>単価（売価税抜き）</td>
-        <td><input type="number" id="unitPrice" value="800" min="1" /></td>
+        <td>単価（売価税抜）</td>
+        <td><input type="number" id="unitPrice" value="800" min="1" inputmode="numeric" /></td>
       </tr>
       <tr>
         <td>GP%（粗利率）</td>
         <td>
-          <input type="number" id="gpPercent" value="30" step="0.1" min="0" max="100" />
-          <small style="color:#888">%</small>
+          <div class="input-wrap">
+            <input type="number" id="gpPercent" value="30" step="0.1" min="0" max="100" inputmode="decimal" />
+            <small>%</small>
+          </div>
         </td>
       </tr>
       <tr>
         <td>原価（自動計算）</td>
-        <td><span class="readonly-val" id="dispCost">—</span></td>
+        <td><span class="readonly-val" id="dispCost">—</span> 円</td>
       </tr>
       <tr>
         <td>総数量</td>
-        <td><input type="number" id="totalQty" value="80" min="1" /></td>
+        <td><input type="number" id="totalQty" value="80" min="1" inputmode="numeric" /></td>
       </tr>
       <tr>
-        <td>総仕入原価（自動計算）</td>
-        <td><span class="readonly-val" id="dispTotalCost">—</span></td>
+        <td>総仕入原価</td>
+        <td><span class="readonly-val" id="dispTotalCost">—</span> 円</td>
       </tr>
       <tr>
-        <td>総仕入売価（自動計算）</td>
-        <td><span class="readonly-val" id="dispTotalSell">—</span></td>
+        <td>総仕入売価</td>
+        <td><span class="readonly-val" id="dispTotalSell">—</span> 円</td>
       </tr>
       <tr>
-        <td>SEJチャージ率（本部取り分）</td>
+        <td>本部チャージ率</td>
         <td>
-          <!-- ✅ 変更：65 → 50 -->
-          <input type="number" id="sejCharge" value="50" min="0" max="100" />
-          <small style="color:#888">%</small>
+          <div class="input-wrap">
+            <input type="number" id="sejCharge" value="50" min="0" max="100" inputmode="numeric" />
+            <small>%</small>
+          </div>
         </td>
       </tr>
       <tr>
-        <td>総収入チャージ率（お店取り分）</td>
+        <td>店舗取り分率</td>
         <td><span class="readonly-val" id="dispStoreCharge">—</span> %</td>
       </tr>
       <tr>
-        <td>消化率100%最終利益</td>
+        <td>消化率100%利益</td>
         <td>
           <span class="final-profit" id="dispFinalProfit">—</span>
-          <div class="formula-note">＝(総仕入売価－総仕入原価)×お店取り分率</div>
         </td>
       </tr>
     </table>
   </div>
 
-  <div class="card" style="display:flex;align-items:stretch;">
-    <div class="info-box" style="width:100%;">
-      <h3>● 操作方法</h3>
-      <p>黄色箇所に数値入力</p>
-      <p>➡ 残数廃棄・残数値下げ時の損益分岐点を算出</p>
-      <br/>
-      <h3>● 注意点</h3>
-      <p>
-        本来は不良品原価率・一般商品原価率を使用しますが、<br/>
-        <span class="warn">この資料は概算の数値</span>のため多少ズレが生じることがあります。
-      </p>
-      <br/>
-      <p><span class="ynote">黄色セル（入力欄）以外は自動計算</span>されます。<br/>
-         入力後「計算する」ボタンを押してください。</p>
-      <br/>
-      <h3>● 計算式（正式）</h3>
-      <p>・原価 ＝ 単価 × (1 − GP%)</p>
-      <p>・利益 ＝ 総仕入売価 − 総仕入原価</p>
-      <p>・最終利益 ＝ 利益 × お店取り分率</p>
-      <p>・<b>最終利益（残数処理後）＝ 最終利益 − 廃棄額(原価)</b></p>
-      <br/>
-      <h3>● 見方</h3>
-      <p>・<span style="color:#e53935;font-weight:bold;">赤背景</span> ＝ 赤字（損失）</p>
-      <p>・黒字 ＝ 利益あり</p>
-      <p>・💡 各セルにマウスを乗せると計算式を表示</p>
+  <div class="card">
+    <div class="info-box">
+      <details open>
+        <summary>ℹ️ 操作ガイド & 計算仕様</summary>
+        <div style="margin-top: 8px;">
+          <p>・<span class="ynote">黄色入力欄</span>の数値を変更し「計算する」を押します。</p>
+          <p>・<span class="warn">概算数値</span>のため実際の会計処理と若干のズレが生じる場合があります。</p>
+          <p>・表内タップで詳細な計算根拠を確認できます。</p>
+          <hr style="margin: 8px 0; border: none; border-top: 1px dashed #ccc;">
+          <p>・<b>廃棄後利益</b> ＝ 最終利益 − 廃棄原価額</p>
+          <p>・<b>値下利益</b> ＝ 値下げ後の売上利益 − 原価割れ損失</p>
+        </div>
+      </details>
     </div>
   </div>
 </div>
 
-<button class="btn-calc" onclick="calculate()">🔢 計算する</button>
+<button class="btn-calc" onclick="calculate()">🔢 計算を更新する</button>
 
 <div class="result-grid">
   <div class="card">
@@ -320,7 +344,7 @@
         <thead>
           <tr>
             <th>廃棄数</th>
-            <th>数量消化率</th>
+            <th>消化率</th>
             <th>廃棄額(原価)</th>
             <th>最終利益</th>
           </tr>
@@ -328,7 +352,7 @@
         <tbody id="tbodyDiscard"></tbody>
       </table>
     </div>
-    <div class="formula-note">💡 セルにホバーで計算式を表示</div>
+    <div class="formula-note">※セルタップで内訳を表示</div>
   </div>
 
   <div class="card">
@@ -337,7 +361,7 @@
       <table class="result">
         <thead>
           <tr>
-            <th rowspan="2">値下げ数</th>
+            <th rowspan="2">値下数</th>
             <th rowspan="2">消化率</th>
             <th colspan="5">値下げ率 →</th>
           </tr>
@@ -353,13 +377,13 @@
         <tfoot id="tfootMarkdown"></tfoot>
       </table>
     </div>
-    <div class="formula-note">💡 セルにホバーで計算式を表示</div>
+    <div class="formula-note">※横スクロール可能 / セルタップで内訳を表示</div>
   </div>
 </div>
 
 <script>
-  const $    = id => document.getElementById(id);
-  const fmtR = v  => isNaN(v) ? '—' : Math.round(v).toLocaleString();
+  const $ = id => document.getElementById(id);
+  const fmtR = v => isNaN(v) ? '—' : Math.round(v).toLocaleString();
 
   function rateClass(rate) {
     if (rate >= 85) return 'rc-high';
@@ -367,19 +391,40 @@
     return 'rc-low';
   }
 
-  const tipEl  = $('globalTip');
-  const OFFSET = 14;
+  const tipEl = $('globalTip');
+  const tipContent = $('tipContent');
+
+  function hideTip() {
+    tipEl.style.display = 'none';
+  }
+
+  function showTip(html, clientX, clientY) {
+    tipContent.innerHTML = html;
+    tipEl.style.display = 'block';
+
+    if (window.innerWidth > 600) {
+      const OFFSET = 12;
+      const tw = tipEl.offsetWidth;
+      const th = tipEl.offsetHeight;
+      const vw = window.innerWidth;
+      
+      let top = clientY - th - OFFSET;
+      if (top < 10) top = clientY + OFFSET;
+
+      let left = clientX - tw / 2;
+      if (left < 8) left = 8;
+      if (left + tw > vw - 8) left = vw - tw - 8;
+
+      tipEl.style.top = top + 'px';
+      tipEl.style.left = left + 'px';
+    }
+  }
 
   function buildTipHTML(title, rows, formula, result, deductLine = '') {
     const rowsHtml = rows.map(r =>
-      `<div class="tip-row">
-         <span class="tip-label">${r.label}</span>
-         <span class="tip-val">${r.val}</span>
-       </div>`
+      `<div class="tip-row"><span class="tip-label">${r.label}</span><span class="tip-val">${r.val}</span></div>`
     ).join('');
-    const deductHtml = deductLine
-      ? `<div class="tip-deduct">🔻 ${deductLine}</div>`
-      : '';
+    const deductHtml = deductLine ? `<div class="tip-deduct">🔻 ${deductLine}</div>` : '';
     return `
       <div class="tip-title">📐 ${title}</div>
       ${rowsHtml}
@@ -393,42 +438,27 @@
     el.dataset.tipHtml = html;
   }
 
-  function positionTip(mouseX, mouseY) {
-    tipEl.style.display = 'block';
-    tipEl.classList.remove('arrow-top', 'arrow-bottom');
-    const tw = tipEl.offsetWidth;
-    const th = tipEl.offsetHeight;
-    const vw = window.innerWidth;
-    const showBelow = mouseY < th + OFFSET + 20;
-    let top, left;
-    if (showBelow) {
-      top = mouseY + OFFSET;
-      tipEl.classList.add('arrow-top');
-    } else {
-      top = mouseY - th - OFFSET;
-      tipEl.classList.add('arrow-bottom');
+  // タッチ/ホバー両対応イベント
+  document.addEventListener('click', e => {
+    const el = e.target.closest('.has-tip');
+    if (!el) {
+      if (!e.target.closest('#globalTip')) hideTip();
+      return;
     }
-    left = mouseX - tw / 2;
-    if (left < 8)           left = 8;
-    if (left + tw > vw - 8) left = vw - tw - 8;
-    tipEl.style.top  = top  + 'px';
-    tipEl.style.left = left + 'px';
-  }
+    showTip(el.dataset.tipHtml, e.clientX, e.clientY);
+  });
 
   document.addEventListener('mouseover', e => {
+    if (window.innerWidth <= 600) return; // スマホではタップ優先
     const el = e.target.closest('.has-tip');
     if (!el || !el.dataset.tipHtml) return;
-    tipEl.innerHTML = el.dataset.tipHtml;
-    positionTip(e.clientX, e.clientY);
+    showTip(el.dataset.tipHtml, e.clientX, e.clientY);
   });
-  document.addEventListener('mousemove', e => {
-    if (tipEl.style.display === 'none') return;
-    if (!e.target.closest('.has-tip')) return;
-    positionTip(e.clientX, e.clientY);
-  });
+
   document.addEventListener('mouseout', e => {
+    if (window.innerWidth <= 600) return;
     if (!e.target.closest('.has-tip')) return;
-    tipEl.style.display = 'none';
+    hideTip();
   });
 
   ['unitPrice','gpPercent','totalQty','sejCharge'].forEach(id => {
@@ -446,11 +476,12 @@
     const storeRate   = (100 - sejRate) / 100;
     const grossProfit = totalSell - totalCost;
     const finalProfit = grossProfit * storeRate;
+
     $('dispCost').textContent        = fmtR(cost);
     $('dispTotalCost').textContent   = fmtR(totalCost);
     $('dispTotalSell').textContent   = fmtR(totalSell);
     $('dispStoreCharge').textContent = Math.round(100 - sejRate);
-    $('dispFinalProfit').textContent = fmtR(finalProfit);
+    $('dispFinalProfit').textContent = fmtR(finalProfit) + ' 円';
     $('dispFinalProfit').style.color = finalProfit < 0 ? '#e53935' : '#1b5e20';
   }
 
@@ -463,9 +494,9 @@
     const totalCost    = cost * qty;
     const storeRate    = (100 - sejRate) / 100;
     const storeRatePct = Math.round(100 - sejRate);
-    const step    = Math.max(1, Math.floor(qty * 0.05));
-    const rows    = Array.from({length: 12}, (_, i) => (i + 1) * step);
-    const mdRates = [0.10, 0.20, 0.30, 0.40, 0.50];
+    const step         = Math.max(1, Math.floor(qty * 0.05));
+    const rows         = Array.from({length: 12}, (_, i) => (i + 1) * step);
+    const mdRates      = [0.10, 0.20, 0.30, 0.40, 0.50];
 
     const tbodyD = $('tbodyDiscard');
     tbodyD.innerHTML = '';
@@ -512,15 +543,15 @@
       attachTip(tdP, buildTipHTML(
         '最終利益（廃棄後）',
         [
-          { label: '実売上',               val: fmtR(revenue) },
-          { label: '総仕入原価',           val: fmtR(totalCost) },
-          { label: 'お店取り分率',         val: `${storeRatePct}%` },
-          { label: 'チャージ適用後',       val: fmtR(baseProfit) },
-          { label: '廃棄額(原価)（控除）', val: fmtR(discardAmt) },
+          { label: '実売上', val: fmtR(revenue) },
+          { label: '総仕入原価', val: fmtR(totalCost) },
+          { label: '店舗取分率', val: `${storeRatePct}%` },
+          { label: 'チャージ後', val: fmtR(baseProfit) },
+          { label: '廃棄控除額', val: fmtR(discardAmt) },
         ],
-        `(実売上(${fmtR(revenue)}) − 総仕入原価(${fmtR(totalCost)})) × ${storeRatePct}%`,
+        `(${fmtR(revenue)} − ${fmtR(totalCost)}) × ${storeRatePct}%`,
         `${fmtR(baseProfit)} 円`,
-        `廃棄額(原価)(${fmtR(discardAmt)}) を控除 → ${fmtR(profit)} 円`
+        `廃棄控除(${fmtR(discardAmt)}) → ${fmtR(profit)} 円`
       ));
       tdP.textContent = fmtR(profit);
 
@@ -541,8 +572,8 @@
       const tdMQ = document.createElement('td');
       attachTip(tdMQ, buildTipHTML(
         '値下げ数',
-        [{ label: '総数量', val: fmtR(qty) }, { label: '通常販売数', val: fmtR(sellQty) }],
-        `総数量(${fmtR(qty)}) − 通常販売数(${fmtR(sellQty)})`,
+        [{ label: '総数量', val: fmtR(qty) }, { label: '定価販売数', val: fmtR(sellQty) }],
+        `総数量(${fmtR(qty)}) − 定価販売(${fmtR(sellQty)})`,
         `${fmtR(mdQty)} 個`
       ));
       tdMQ.textContent = fmtR(mdQty);
@@ -550,9 +581,9 @@
       const tdMR = document.createElement('td');
       tdMR.className = rateClass(rateVal);
       attachTip(tdMR, buildTipHTML(
-        '消化率（通常販売分）',
-        [{ label: '通常販売数', val: fmtR(sellQty) }, { label: '総数量', val: fmtR(qty) }],
-        `通常販売数(${fmtR(sellQty)}) ÷ 総数量(${fmtR(qty)}) × 100`,
+        '消化率（定価分）',
+        [{ label: '定価販売数', val: fmtR(sellQty) }, { label: '総数量', val: fmtR(qty) }],
+        `定価販売(${fmtR(sellQty)}) ÷ 総数量(${fmtR(qty)}) × 100`,
         `${Math.round(rateVal)}%`
       ));
       tdMR.textContent = Math.round(rateVal) + '%';
@@ -569,20 +600,17 @@
         td.className = profit < 0 ? 'neg' : 'pos';
         const deductLine = costLoss > 0
           ? `原価割れ損失(${fmtR(costLoss)}) を控除 → ${fmtR(profit)} 円`
-          : `原価割れなし（控除なし） → ${fmtR(profit)} 円`;
+          : `原価割れなし → ${fmtR(profit)} 円`;
         attachTip(td, buildTipHTML(
-          `最終利益（値下げ${Math.round(mdRate*100)}%）`,
+          `最終利益（値下${Math.round(mdRate*100)}%）`,
           [
-            { label: '通常売上',             val: `${fmtR(price)}×${fmtR(sellQty)}=${fmtR(price*sellQty)}` },
-            { label: '値下げ後単価',         val: fmtR(mdPrice) },
-            { label: '値下げ売上',           val: `${fmtR(mdPrice)}×${fmtR(mdQty)}=${fmtR(mdPrice*mdQty)}` },
-            { label: '合計売上',             val: fmtR(revenue) },
-            { label: '総仕入原価',           val: fmtR(totalCost) },
-            { label: 'お店取り分率',         val: `${storeRatePct}%` },
-            { label: 'チャージ適用後',       val: fmtR(baseProfit) },
-            { label: '原価割れ損失（控除）', val: fmtR(costLoss) },
+            { label: '定価売上', val: fmtR(price * sellQty) },
+            { label: '値下単価', val: fmtR(mdPrice) },
+            { label: '値下売上', val: fmtR(mdPrice * mdQty) },
+            { label: '合計売上', val: fmtR(revenue) },
+            { label: '店舗取分', val: `${storeRatePct}%` },
           ],
-          `(合計売上(${fmtR(revenue)}) − 総仕入原価(${fmtR(totalCost)})) × ${storeRatePct}%`,
+          `(${fmtR(revenue)} − ${fmtR(totalCost)}) × ${storeRatePct}%`,
           `${fmtR(baseProfit)} 円`,
           deductLine
         ));
@@ -595,27 +623,27 @@
 
     const footDefs = [
       {
-        label: '一個当たり売価',
-        fn:    (r) => price * (1 - r),
+        label: '1個当たり売価',
+        fn: (r) => price * (1 - r),
         tipFn: (r) => ({
-          title:   '一個当たり売価',
-          rows:    [{ label: '単価', val: fmtR(price) }, { label: '値下げ率', val: `${Math.round(r*100)}%` }],
-          formula: `単価(${fmtR(price)}) × (1 − ${Math.round(r*100)}%)`,
-          deduct:  ''
+          title: '1個当たり売価',
+          rows: [{ label: '定価', val: fmtR(price) }, { label: '値下げ率', val: `${Math.round(r*100)}%` }],
+          formula: `${fmtR(price)} × (1 − ${Math.round(r*100)}%)`,
+          deduct: ''
         })
       },
       {
-        label: '一個当たり利益（粗利）',
-        fn:    (r) => price * (1 - r) - cost,
+        label: '1個当たり粗利',
+        fn: (r) => price * (1 - r) - cost,
         tipFn: (r) => ({
-          title:   '一個当たり利益',
-          rows:    [{ label: '値下げ後単価', val: fmtR(price*(1-r)) }, { label: '原価/個', val: fmtR(cost) }],
-          formula: `値下げ後単価(${fmtR(price*(1-r))}) − 原価(${fmtR(cost)})`,
-          deduct:  ''
+          title: '1個当たり粗利',
+          rows: [{ label: '値下後売価', val: fmtR(price*(1-r)) }, { label: '原価', val: fmtR(cost) }],
+          formula: `${fmtR(price*(1-r))} − ${fmtR(cost)}`,
+          deduct: ''
         })
       },
       {
-        label: '一個当たり最終利益',
+        label: '1個当たり最終益',
         fn: (r) => {
           const mdPrice    = price * (1 - r);
           const baseProfit = (mdPrice - cost) * storeRate;
@@ -628,55 +656,16 @@
           const costLoss   = mdPrice < cost ? (cost - mdPrice) : 0;
           const profit     = baseProfit - costLoss;
           return {
-            title:   '一個当たり最終利益',
-            rows:    [
-              { label: '一個当たり利益',  val: fmtR(mdPrice - cost) },
-              { label: 'お店取り分率',    val: `${storeRatePct}%` },
-              { label: 'チャージ適用後',  val: fmtR(baseProfit) },
-              { label: '原価割れ損失/個', val: fmtR(costLoss) },
+            title: '1個当たり最終利益',
+            rows: [
+              { label: '粗利', val: fmtR(mdPrice - cost) },
+              { label: '店舗取分', val: `${storeRatePct}%` },
             ],
-            formula: `(値下げ後単価(${fmtR(mdPrice)}) − 原価(${fmtR(cost)})) × ${storeRatePct}%`,
-            deduct:  costLoss > 0
-              ? `原価割れ損失/個(${fmtR(costLoss)}) を控除 → ${fmtR(profit)} 円`
-              : `原価割れなし → ${fmtR(profit)} 円`
+            formula: `(${fmtR(mdPrice)} − ${fmtR(cost)}) × ${storeRatePct}%`,
+            deduct: costLoss > 0 ? `原価割れ損失(${fmtR(costLoss)}) 控除` : ''
           };
         }
-      },
-      {
-        label: '原価割れ額',
-        fn:    (r) => { const mp = price*(1-r); return mp < cost ? mp - cost : 0; },
-        tipFn: (r) => {
-          const mp   = price*(1-r);
-          const over = mp < cost ? mp - cost : 0;
-          return {
-            title:   '原価割れ額',
-            rows:    [
-              { label: '値下げ後単価', val: fmtR(mp) },
-              { label: '原価/個',      val: fmtR(cost) },
-              { label: '原価割れ',     val: mp < cost ? 'あり ⚠️' : 'なし ✅' },
-            ],
-            formula: mp < cost ? `値下げ後単価(${fmtR(mp)}) − 原価(${fmtR(cost)})` : '原価割れなし → 0',
-            deduct:  ''
-          };
-        }
-      },
-      {
-        label: '原価割れチェック',
-        fn:    (r) => { const mp = price*(1-r); const over = mp < cost ? mp - cost : 0; return over * storeRate; },
-        tipFn: (r) => {
-          const mp   = price*(1-r);
-          const over = mp < cost ? mp - cost : 0;
-          return {
-            title:   '原価割れチェック',
-            rows:    [
-              { label: '原価割れ額',   val: fmtR(over) },
-              { label: 'お店取り分率', val: `${storeRatePct}%` },
-            ],
-            formula: mp < cost ? `原価割れ額(${fmtR(over)}) × ${storeRatePct}%` : '原価割れなし → 0',
-            deduct:  ''
-          };
-        }
-      },
+      }
     ];
 
     footDefs.forEach(def => {
