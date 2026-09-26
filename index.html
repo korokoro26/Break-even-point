@@ -2,34 +2,62 @@
 <html lang="ja">
 <head>
   <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no"/>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover"/>
   <title>損益分岐確認シート</title>
   <style>
-    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+    *, *::before, *::after {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+    }
     body {
       font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Hiragino Sans", "Meiryo", sans-serif;
       background: #1a1a2e;
       min-height: 100vh;
-      padding: 12px;
       color: #333;
       -webkit-tap-highlight-color: transparent;
+      padding: 12px 10px;
     }
+    @media (min-width: 600px) {
+      body {
+        padding: 16px;
+      }
+    }
+
+    /* 左右幅を均一に保つ中央揃えメインコンテナ */
+    .app-container {
+      width: 100%;
+      max-width: 1200px;
+      margin: 0 auto;
+      display: flex;
+      flex-direction: column;
+    }
+
     .page-title {
       text-align: center;
       color: #fff;
       font-size: 1.35rem;
       font-weight: bold;
-      margin: 10px 0 16px;
+      margin: 8px 0 16px;
       letter-spacing: 1px;
       text-shadow: 0 0 15px rgba(100,180,255,0.6);
+      width: 100%;
     }
+
     .card {
       background: #fff;
       border-radius: 12px;
       box-shadow: 0 4px 16px rgba(0,0,0,0.25);
-      padding: 16px;
+      padding: 14px;
       margin-bottom: 16px;
+      width: 100%;
     }
+    @media (min-width: 600px) {
+      .card {
+        padding: 18px;
+      }
+    }
+
     .card-title {
       font-size: 1rem;
       font-weight: bold;
@@ -38,30 +66,54 @@
       padding-left: 8px;
       margin-bottom: 12px;
     }
+
     .top-grid {
       display: grid;
-      grid-template-columns: 1fr 1fr;
+      grid-template-columns: 1fr;
       gap: 16px;
+      width: 100%;
       margin-bottom: 16px;
     }
-    @media (max-width: 768px) {
-      .top-grid { grid-template-columns: 1fr; }
+    @media (min-width: 769px) {
+      .top-grid {
+        grid-template-columns: 1fr 1fr;
+      }
     }
-    .form-table { width: 100%; border-collapse: collapse; }
-    .form-table tr { border-bottom: 1px solid #f0f0f0; }
-    .form-table tr:last-child { border-bottom: none; }
+
+    .form-table {
+      width: 100%;
+      border-collapse: collapse;
+      table-layout: fixed;
+    }
+    .form-table tr {
+      border-bottom: 1px solid #f0f0f0;
+    }
+    .form-table tr:last-child {
+      border-bottom: none;
+    }
     .form-table td {
       padding: 8px 4px;
       font-size: 0.85rem;
       vertical-align: middle;
     }
-    .form-table td:first-child { width: 55%; color: #444; font-weight: 600; }
-    .form-table td:last-child  { width: 45%; }
+    .form-table td:first-child {
+      width: 52%;
+      color: #444;
+      font-weight: 600;
+      padding-right: 6px;
+      word-break: break-word;
+    }
+    .form-table td:last-child  {
+      width: 48%;
+      text-align: right;
+    }
     
     .input-wrap {
-      display: flex;
+      display: inline-flex;
       align-items: center;
+      justify-content: flex-end;
       gap: 4px;
+      width: 100%;
     }
     input[type="text"], input[type="number"] {
       width: 100%;
@@ -71,15 +123,26 @@
       border-radius: 6px;
       font-size: 1rem; /* iOSでのズーム防止のため16px以上 */
       background: #fffde7;
+      text-align: right;
       transition: border-color .2s;
+    }
+    input[type="text"] {
+      text-align: left;
     }
     input[type="text"]:focus, input[type="number"]:focus {
       outline: none;
       border-color: #f5a623;
       background: #fff9c4;
     }
-    .readonly-val { font-weight: bold; color: #1a3a6b; font-size: 0.95rem; }
-    .final-profit { font-size: 1.3rem; font-weight: bold; }
+    .readonly-val {
+      font-weight: bold;
+      color: #1a3a6b;
+      font-size: 0.95rem;
+    }
+    .final-profit {
+      font-size: 1.3rem;
+      font-weight: bold;
+    }
     
     .info-box {
       background: #f9fbfd;
@@ -88,6 +151,8 @@
       padding: 12px;
       font-size: 0.8rem;
       line-height: 1.7;
+      width: 100%;
+      height: 100%;
     }
     .info-box details summary {
       font-weight: bold;
@@ -114,23 +179,32 @@
       transition: opacity .2s, transform .1s;
       margin-bottom: 16px;
       user-select: none;
+      text-align: center;
     }
-    .btn-calc:active { transform: scale(0.98); opacity: 0.9; }
+    .btn-calc:active {
+      transform: scale(0.98);
+      opacity: 0.9;
+    }
 
     .result-grid {
       display: grid;
-      grid-template-columns: 1fr 1fr;
+      grid-template-columns: 1fr;
       gap: 16px;
+      width: 100%;
     }
-    @media (max-width: 900px) {
-      .result-grid { grid-template-columns: 1fr; }
+    @media (min-width: 900px) {
+      .result-grid {
+        grid-template-columns: 1fr 1fr;
+      }
     }
 
     .result-table-wrap {
+      width: 100%;
       overflow-x: auto;
       -webkit-overflow-scrolling: touch;
       border-radius: 6px;
       border: 1px solid #d0d7de;
+      margin: 0 auto;
     }
     table.result {
       width: 100%;
@@ -151,8 +225,12 @@
       top: 0;
       z-index: 1;
     }
-    table.result thead th.sub-head { background: #2563b0; }
-    table.result tbody tr:nth-child(even) { background: #f8fafd; }
+    table.result thead th.sub-head {
+      background: #2563b0;
+    }
+    table.result tbody tr:nth-child(even) {
+      background: #f8fafd;
+    }
     
     .rc-high { color: #1a3a6b; font-weight: bold; }
     .rc-mid  { color: #e65100; font-weight: bold; }
@@ -171,7 +249,10 @@
       font-weight: bold;
       font-size: 0.75rem;
     }
-    table.result tfoot .neg-foot { background: #ffcdd2 !important; color: #b71c1c; }
+    table.result tfoot .neg-foot {
+      background: #ffcdd2 !important;
+      color: #b71c1c;
+    }
     .formula-note {
       font-size: 0.72rem;
       color: #777;
@@ -256,128 +337,130 @@
   <div class="tip-close" onclick="hideTip()">閉じる [✕]</div>
 </div>
 
-<div class="page-title">📊 損益分岐確認シート</div>
+<div class="app-container">
+  <div class="page-title">📊 損益分岐確認シート</div>
 
-<div class="top-grid">
-  <div class="card">
-    <div class="card-title">🟡 基本情報入力</div>
-    <table class="form-table">
-      <tr>
-        <td>商品名</td>
-        <td><input type="text" id="productName" value="" placeholder="商品名" /></td>
-      </tr>
-      <tr>
-        <td>単価（売価税抜）</td>
-        <td><input type="number" id="unitPrice" value="800" min="1" inputmode="numeric" /></td>
-      </tr>
-      <tr>
-        <td>GP%（粗利率）</td>
-        <td>
-          <div class="input-wrap">
-            <input type="number" id="gpPercent" value="30" step="0.1" min="0" max="100" inputmode="decimal" />
-            <small>%</small>
-          </div>
-        </td>
-      </tr>
-      <tr>
-        <td>原価（自動計算）</td>
-        <td><span class="readonly-val" id="dispCost">—</span> 円</td>
-      </tr>
-      <tr>
-        <td>総数量</td>
-        <td><input type="number" id="totalQty" value="80" min="1" inputmode="numeric" /></td>
-      </tr>
-      <tr>
-        <td>総仕入原価</td>
-        <td><span class="readonly-val" id="dispTotalCost">—</span> 円</td>
-      </tr>
-      <tr>
-        <td>総仕入売価</td>
-        <td><span class="readonly-val" id="dispTotalSell">—</span> 円</td>
-      </tr>
-      <tr>
-        <td>本部チャージ率</td>
-        <td>
-          <div class="input-wrap">
-            <input type="number" id="sejCharge" value="50" min="0" max="100" inputmode="numeric" />
-            <small>%</small>
-          </div>
-        </td>
-      </tr>
-      <tr>
-        <td>店舗取り分率</td>
-        <td><span class="readonly-val" id="dispStoreCharge">—</span> %</td>
-      </tr>
-      <tr>
-        <td>消化率100%利益</td>
-        <td>
-          <span class="final-profit" id="dispFinalProfit">—</span>
-        </td>
-      </tr>
-    </table>
-  </div>
-
-  <div class="card">
-    <div class="info-box">
-      <details open>
-        <summary>ℹ️ 操作ガイド & 計算仕様</summary>
-        <div style="margin-top: 8px;">
-          <p>・<span class="ynote">黄色入力欄</span>の数値を変更し「計算する」を押します。</p>
-          <p>・<span class="warn">概算数値</span>のため実際の会計処理と若干のズレが生じる場合があります。</p>
-          <p>・表内タップで詳細な計算根拠を確認できます。</p>
-          <hr style="margin: 8px 0; border: none; border-top: 1px dashed #ccc;">
-          <p>・<b>廃棄後利益</b> ＝ 最終利益 − 廃棄原価額</p>
-          <p>・<b>値下利益</b> ＝ 値下げ後の売上利益 − 原価割れ損失</p>
-        </div>
-      </details>
-    </div>
-  </div>
-</div>
-
-<button class="btn-calc" onclick="calculate()">🔢 計算を更新する</button>
-
-<div class="result-grid">
-  <div class="card">
-    <div class="section-label">🗑️ 残数廃棄パターン</div>
-    <div class="result-table-wrap">
-      <table class="result">
-        <thead>
-          <tr>
-            <th>廃棄数</th>
-            <th>消化率</th>
-            <th>廃棄額(原価)</th>
-            <th>最終利益</th>
-          </tr>
-        </thead>
-        <tbody id="tbodyDiscard"></tbody>
+  <div class="top-grid">
+    <div class="card">
+      <div class="card-title">🟡 基本情報入力</div>
+      <table class="form-table">
+        <tr>
+          <td>商品名</td>
+          <td><input type="text" id="productName" value="" placeholder="商品名" /></td>
+        </tr>
+        <tr>
+          <td>単価（売価税抜）</td>
+          <td><input type="number" id="unitPrice" value="800" min="1" inputmode="numeric" /></td>
+        </tr>
+        <tr>
+          <td>GP%（粗利率）</td>
+          <td>
+            <div class="input-wrap">
+              <input type="number" id="gpPercent" value="30" step="0.1" min="0" max="100" inputmode="decimal" />
+              <small>%</small>
+            </div>
+          </td>
+        </tr>
+        <tr>
+          <td>原価（自動計算）</td>
+          <td><span class="readonly-val" id="dispCost">—</span> 円</td>
+        </tr>
+        <tr>
+          <td>総数量</td>
+          <td><input type="number" id="totalQty" value="80" min="1" inputmode="numeric" /></td>
+        </tr>
+        <tr>
+          <td>総仕入原価</td>
+          <td><span class="readonly-val" id="dispTotalCost">—</span> 円</td>
+        </tr>
+        <tr>
+          <td>総仕入売価</td>
+          <td><span class="readonly-val" id="dispTotalSell">—</span> 円</td>
+        </tr>
+        <tr>
+          <td>本部チャージ率</td>
+          <td>
+            <div class="input-wrap">
+              <input type="number" id="sejCharge" value="50" min="0" max="100" inputmode="numeric" />
+              <small>%</small>
+            </div>
+          </td>
+        </tr>
+        <tr>
+          <td>店舗取り分率</td>
+          <td><span class="readonly-val" id="dispStoreCharge">—</span> %</td>
+        </tr>
+        <tr>
+          <td>消化率100%利益</td>
+          <td>
+            <span class="final-profit" id="dispFinalProfit">—</span>
+          </td>
+        </tr>
       </table>
     </div>
-    <div class="formula-note">※セルタップで内訳を表示</div>
+
+    <div class="card">
+      <div class="info-box">
+        <details open>
+          <summary>ℹ️ 操作ガイド & 計算仕様</summary>
+          <div style="margin-top: 8px;">
+            <p>・<span class="ynote">黄色入力欄</span>の数値を変更し「計算する」を押します。</p>
+            <p>・<span class="warn">概算数値</span>のため実際の会計処理と若干のズレが生じる場合があります。</p>
+            <p>・表内タップで詳細な計算根拠を確認できます。</p>
+            <hr style="margin: 8px 0; border: none; border-top: 1px dashed #ccc;">
+            <p>・<b>廃棄後利益</b> ＝ 最終利益 − 廃棄原価額</p>
+            <p>・<b>値下利益</b> ＝ 値下げ後の売上利益 − 原価割れ損失</p>
+          </div>
+        </details>
+      </div>
+    </div>
   </div>
 
-  <div class="card">
-    <div class="section-label">🏷️ 残数値下げパターン</div>
-    <div class="result-table-wrap">
-      <table class="result">
-        <thead>
-          <tr>
-            <th rowspan="2">値下数</th>
-            <th rowspan="2">消化率</th>
-            <th colspan="5">値下げ率 →</th>
-          </tr>
-          <tr>
-            <th class="sub-head">10%</th>
-            <th class="sub-head">20%</th>
-            <th class="sub-head">30%</th>
-            <th class="sub-head">40%</th>
-            <th class="sub-head">50%</th>
-          </tr>
-        </thead>
-        <tbody id="tbodyMarkdown"></tbody>
-        <tfoot id="tfootMarkdown"></tfoot>
-      </table>
+  <button class="btn-calc" onclick="calculate()">🔢 計算を更新する</button>
+
+  <div class="result-grid">
+    <div class="card">
+      <div class="section-label">🗑️ 残数廃棄パターン</div>
+      <div class="result-table-wrap">
+        <table class="result">
+          <thead>
+            <tr>
+              <th>廃棄数</th>
+              <th>消化率</th>
+              <th>廃棄額(原価)</th>
+              <th>最終利益</th>
+            </tr>
+          </thead>
+          <tbody id="tbodyDiscard"></tbody>
+        </table>
+      </div>
+      <div class="formula-note">※セルタップで内訳を表示</div>
     </div>
-    <div class="formula-note">※横スクロール可能 / セルタップで内訳を表示</div>
+
+    <div class="card">
+      <div class="section-label">🏷️ 残数値下げパターン</div>
+      <div class="result-table-wrap">
+        <table class="result">
+          <thead>
+            <tr>
+              <th rowspan="2">値下数</th>
+              <th rowspan="2">消化率</th>
+              <th colspan="5">値下げ率 →</th>
+            </tr>
+            <tr>
+              <th class="sub-head">10%</th>
+              <th class="sub-head">20%</th>
+              <th class="sub-head">30%</th>
+              <th class="sub-head">40%</th>
+              <th class="sub-head">50%</th>
+            </tr>
+          </thead>
+          <tbody id="tbodyMarkdown"></tbody>
+          <tfoot id="tfootMarkdown"></tfoot>
+        </table>
+      </div>
+      <div class="formula-note">※横スクロール可能 / セルタップで内訳を表示</div>
+    </div>
   </div>
 </div>
 
