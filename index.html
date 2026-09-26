@@ -16,18 +16,18 @@
       min-height: 100vh;
       color: #333;
       -webkit-tap-highlight-color: transparent;
-      padding: 12px 10px;
+      padding: 12px 10px 100px; /* ツールチップが下部に出ても被らないように下余白確保 */
     }
     @media (min-width: 600px) {
       body {
-        padding: 16px;
+        padding: 16px 16px 120px;
       }
     }
 
-    /* 左右幅を均一に保つ中央揃えメインコンテナ */
+    /* 左右幅を厳密に均一化するメインコンテナ */
     .app-container {
       width: 100%;
-      max-width: 1200px;
+      max-width: 1000px;
       margin: 0 auto;
       display: flex;
       flex-direction: column;
@@ -115,21 +115,18 @@
       gap: 4px;
       width: 100%;
     }
-    input[type="text"], input[type="number"] {
+    input[type="number"] {
       width: 100%;
-      min-height: 40px; /* タップしやすい高さ */
+      min-height: 40px;
       padding: 6px 8px;
       border: 1.5px solid #ccc;
       border-radius: 6px;
-      font-size: 1rem; /* iOSでのズーム防止のため16px以上 */
+      font-size: 1rem;
       background: #fffde7;
       text-align: right;
       transition: border-color .2s;
     }
-    input[type="text"] {
-      text-align: left;
-    }
-    input[type="text"]:focus, input[type="number"]:focus {
+    input[type="number"]:focus {
       outline: none;
       border-color: #f5a623;
       background: #fff9c4;
@@ -260,81 +257,98 @@
       text-align: right;
     }
 
-    /* ポップアップ／ツールチップ（スマホ最適化） */
+    /* ========================================================
+       ツールチップの横幅完全均一化（文字量・タップ位置に関わらず統一）
+       ======================================================== */
     #globalTip {
       display: none;
       position: fixed;
       z-index: 99999;
       background: #1e2a3a;
       color: #e8f0fe;
-      border-radius: 10px;
-      padding: 12px;
-      font-size: 0.78rem;
+      border-radius: 12px;
+      padding: 14px 16px;
+      font-size: 0.8rem;
       line-height: 1.6;
-      box-shadow: 0 8px 24px rgba(0,0,0,0.6);
+      box-shadow: 0 10px 32px rgba(0, 0, 0, 0.75);
+      border: 1px solid #3b5a82;
       pointer-events: auto;
-      max-width: 90vw;
+      
+      /* 常に左右幅を寸分狂わず固定 */
+      left: 12px !important;
+      right: 12px !important;
+      bottom: 16px !important;
+      top: auto !important;
+      width: calc(100% - 24px) !important;
+      max-width: 520px !important;
+      margin: 0 auto !important;
+      box-sizing: border-box !important;
+      animation: tipFadeIn .15s ease-out;
     }
-    @media (max-width: 600px) {
-      #globalTip {
-        left: 5vw !important;
-        right: 5vw !important;
-        bottom: 20px !important;
-        top: auto !important;
-        width: 90vw;
-      }
+
+    @keyframes tipFadeIn {
+      from { opacity: 0; transform: translateY(8px); }
+      to   { opacity: 1; transform: translateY(0); }
     }
+
     .tip-title {
-      font-size: 0.85rem;
+      font-size: 0.88rem;
       font-weight: bold;
       color: #90caf9;
-      margin-bottom: 6px;
+      margin-bottom: 8px;
       border-bottom: 1px solid #2e4a6a;
       padding-bottom: 4px;
     }
     .tip-row {
       display: flex;
       justify-content: space-between;
-      gap: 8px;
-      padding: 2px 0;
+      gap: 12px;
+      padding: 2.5px 0;
     }
-    .tip-label { color: #b0bec5; }
-    .tip-val   { color: #fff; font-weight: bold; }
+    .tip-label { color: #b0bec5; font-size: 0.8rem; }
+    .tip-val   { color: #fff; font-weight: bold; font-size: 0.82rem; }
     .tip-formula {
       margin-top: 6px;
       padding-top: 5px;
-      border-top: 1px solid #2e4a6a;
+      border-top: 1px dashed #2e4a6a;
       color: #a5d6a7;
-      font-size: 0.75rem;
+      font-size: 0.78rem;
     }
     .tip-result {
       margin-top: 4px;
       color: #ffcc80;
       font-weight: bold;
+      font-size: 0.82rem;
     }
     .tip-deduct {
       margin-top: 3px;
       color: #ef9a9a;
-      font-size: 0.75rem;
+      font-size: 0.76rem;
     }
-    .tip-close {
-      display: none;
-      text-align: right;
+    .tip-close-btn {
+      margin-top: 8px;
+      padding: 6px 0;
+      text-align: center;
+      background: #25384f;
       color: #90caf9;
       font-weight: bold;
-      margin-top: 6px;
+      font-size: 0.8rem;
+      border-radius: 6px;
       cursor: pointer;
+      user-select: none;
+      transition: background .2s;
     }
-    @media (max-width: 600px) {
-      .tip-close { display: block; }
+    .tip-close-btn:active {
+      background: #2f4561;
     }
   </style>
 </head>
 <body>
 
+
 <div id="globalTip">
   <div id="tipContent"></div>
-  <div class="tip-close" onclick="hideTip()">閉じる [✕]</div>
+  <div class="tip-close-btn" onclick="hideTip()">タップして閉じる ✕</div>
 </div>
 
 <div class="app-container">
@@ -344,10 +358,6 @@
     <div class="card">
       <div class="card-title">🟡 基本情報入力</div>
       <table class="form-table">
-        <tr>
-          <td>商品名</td>
-          <td><input type="text" id="productName" value="" placeholder="商品名" /></td>
-        </tr>
         <tr>
           <td>単価（売価税抜）</td>
           <td><input type="number" id="unitPrice" value="800" min="1" inputmode="numeric" /></td>
@@ -404,9 +414,9 @@
         <details open>
           <summary>ℹ️ 操作ガイド & 計算仕様</summary>
           <div style="margin-top: 8px;">
-            <p>・<span class="ynote">黄色入力欄</span>の数値を変更し「計算する」を押します。</p>
+            <p>・<span class="ynote">黄色入力欄</span>の数値を変更し「計算を更新する」を押します。</p>
             <p>・<span class="warn">概算数値</span>のため実際の会計処理と若干のズレが生じる場合があります。</p>
-            <p>・表内タップで詳細な計算根拠を確認できます。</p>
+            <p>・表内セルタップで詳細な計算根拠を確認できます。</p>
             <hr style="margin: 8px 0; border: none; border-top: 1px dashed #ccc;">
             <p>・<b>廃棄後利益</b> ＝ 最終利益 − 廃棄原価額</p>
             <p>・<b>値下利益</b> ＝ 値下げ後の売上利益 − 原価割れ損失</p>
@@ -464,6 +474,7 @@
   </div>
 </div>
 
+
 <script>
   const $ = id => document.getElementById(id);
   const fmtR = v => isNaN(v) ? '—' : Math.round(v).toLocaleString();
@@ -481,26 +492,10 @@
     tipEl.style.display = 'none';
   }
 
-  function showTip(html, clientX, clientY) {
+  // どのセルをタップしても位置や文字量によるサイズブレが生じない固定表示
+  function showTip(html) {
     tipContent.innerHTML = html;
     tipEl.style.display = 'block';
-
-    if (window.innerWidth > 600) {
-      const OFFSET = 12;
-      const tw = tipEl.offsetWidth;
-      const th = tipEl.offsetHeight;
-      const vw = window.innerWidth;
-      
-      let top = clientY - th - OFFSET;
-      if (top < 10) top = clientY + OFFSET;
-
-      let left = clientX - tw / 2;
-      if (left < 8) left = 8;
-      if (left + tw > vw - 8) left = vw - tw - 8;
-
-      tipEl.style.top = top + 'px';
-      tipEl.style.left = left + 'px';
-    }
   }
 
   function buildTipHTML(title, rows, formula, result, deductLine = '') {
@@ -521,27 +516,14 @@
     el.dataset.tipHtml = html;
   }
 
-  // タッチ/ホバー両対応イベント
+  // タップ・クリックイベント
   document.addEventListener('click', e => {
     const el = e.target.closest('.has-tip');
     if (!el) {
       if (!e.target.closest('#globalTip')) hideTip();
       return;
     }
-    showTip(el.dataset.tipHtml, e.clientX, e.clientY);
-  });
-
-  document.addEventListener('mouseover', e => {
-    if (window.innerWidth <= 600) return; // スマホではタップ優先
-    const el = e.target.closest('.has-tip');
-    if (!el || !el.dataset.tipHtml) return;
-    showTip(el.dataset.tipHtml, e.clientX, e.clientY);
-  });
-
-  document.addEventListener('mouseout', e => {
-    if (window.innerWidth <= 600) return;
-    if (!e.target.closest('.has-tip')) return;
-    hideTip();
+    showTip(el.dataset.tipHtml);
   });
 
   ['unitPrice','gpPercent','totalQty','sejCharge'].forEach(id => {
