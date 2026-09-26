@@ -16,18 +16,15 @@
       min-height: 100vh;
       color: #333;
       -webkit-tap-highlight-color: transparent;
-      padding: 12px 10px 100px; /* ツールチップが下部に出ても被らないように下余白確保 */
-    }
-    @media (min-width: 600px) {
-      body {
-        padding: 16px 16px 120px;
-      }
+      padding: 12px 12px 140px; /* ツールチップ表示時も被らないよう下部余白を最適化 */
     }
 
-    /* 左右幅を厳密に均一化するメインコンテナ */
+    /* ========================================================
+       スマホ最適化：すべての要素の基準幅（520px）を共通化
+       ======================================================== */
     .app-container {
       width: 100%;
-      max-width: 1000px;
+      max-width: 520px; /* ツールチップの幅と完全統一 */
       margin: 0 auto;
       display: flex;
       flex-direction: column;
@@ -36,7 +33,7 @@
     .page-title {
       text-align: center;
       color: #fff;
-      font-size: 1.35rem;
+      font-size: 1.3rem;
       font-weight: bold;
       margin: 8px 0 16px;
       letter-spacing: 1px;
@@ -44,18 +41,14 @@
       width: 100%;
     }
 
+    /* 各セクション・カードの統一スタイル */
     .card {
       background: #fff;
       border-radius: 12px;
       box-shadow: 0 4px 16px rgba(0,0,0,0.25);
-      padding: 14px;
+      padding: 16px;
       margin-bottom: 16px;
       width: 100%;
-    }
-    @media (min-width: 600px) {
-      .card {
-        padding: 18px;
-      }
     }
 
     .card-title {
@@ -67,17 +60,13 @@
       margin-bottom: 12px;
     }
 
-    .top-grid {
-      display: grid;
-      grid-template-columns: 1fr;
+    /* 1つずつ縦に並べるレイアウト構成 */
+    .vertical-stack {
+      display: flex;
+      flex-direction: column;
       gap: 16px;
       width: 100%;
       margin-bottom: 16px;
-    }
-    @media (min-width: 769px) {
-      .top-grid {
-        grid-template-columns: 1fr 1fr;
-      }
     }
 
     .form-table {
@@ -92,8 +81,8 @@
       border-bottom: none;
     }
     .form-table td {
-      padding: 8px 4px;
-      font-size: 0.85rem;
+      padding: 9px 4px;
+      font-size: 0.88rem;
       vertical-align: middle;
     }
     .form-table td:first-child {
@@ -103,7 +92,7 @@
       padding-right: 6px;
       word-break: break-word;
     }
-    .form-table td:last-child  {
+    .form-table td:last-child {
       width: 48%;
       text-align: right;
     }
@@ -137,7 +126,7 @@
       font-size: 0.95rem;
     }
     .final-profit {
-      font-size: 1.3rem;
+      font-size: 1.25rem;
       font-weight: bold;
     }
     
@@ -146,10 +135,9 @@
       border: 1px solid #d9e2ec;
       border-radius: 8px;
       padding: 12px;
-      font-size: 0.8rem;
+      font-size: 0.82rem;
       line-height: 1.7;
       width: 100%;
-      height: 100%;
     }
     .info-box details summary {
       font-weight: bold;
@@ -183,18 +171,6 @@
       opacity: 0.9;
     }
 
-    .result-grid {
-      display: grid;
-      grid-template-columns: 1fr;
-      gap: 16px;
-      width: 100%;
-    }
-    @media (min-width: 900px) {
-      .result-grid {
-        grid-template-columns: 1fr 1fr;
-      }
-    }
-
     .result-table-wrap {
       width: 100%;
       overflow-x: auto;
@@ -206,7 +182,7 @@
     table.result {
       width: 100%;
       border-collapse: collapse;
-      font-size: 0.8rem;
+      font-size: 0.82rem;
       text-align: center;
     }
     table.result th, table.result td {
@@ -244,21 +220,21 @@
     table.result tfoot td {
       background: #edf2f7;
       font-weight: bold;
-      font-size: 0.75rem;
+      font-size: 0.78rem;
     }
     table.result tfoot .neg-foot {
       background: #ffcdd2 !important;
       color: #b71c1c;
     }
     .formula-note {
-      font-size: 0.72rem;
+      font-size: 0.75rem;
       color: #777;
       margin-top: 6px;
       text-align: right;
     }
 
     /* ========================================================
-       ツールチップの横幅完全均一化（文字量・タップ位置に関わらず統一）
+       ツールチップ：カード幅（520px）と左右位置を完全に一致
        ======================================================== */
     #globalTip {
       display: none;
@@ -268,18 +244,18 @@
       color: #e8f0fe;
       border-radius: 12px;
       padding: 14px 16px;
-      font-size: 0.8rem;
+      font-size: 0.82rem;
       line-height: 1.6;
       box-shadow: 0 10px 32px rgba(0, 0, 0, 0.75);
       border: 1px solid #3b5a82;
       pointer-events: auto;
       
-      /* 常に左右幅を寸分狂わず固定 */
+      /* 画面下部に固定し、中央揃えかつ最大幅520px（親コンテナと完全一致） */
       left: 12px !important;
       right: 12px !important;
-      bottom: 16px !important;
+      bottom: 14px !important;
       top: auto !important;
-      width: calc(100% - 24px) !important;
+      width: auto !important;
       max-width: 520px !important;
       margin: 0 auto !important;
       box-sizing: border-box !important;
@@ -326,13 +302,13 @@
       font-size: 0.76rem;
     }
     .tip-close-btn {
-      margin-top: 8px;
-      padding: 6px 0;
+      margin-top: 10px;
+      padding: 8px 0;
       text-align: center;
       background: #25384f;
       color: #90caf9;
       font-weight: bold;
-      font-size: 0.8rem;
+      font-size: 0.82rem;
       border-radius: 6px;
       cursor: pointer;
       user-select: none;
@@ -345,7 +321,6 @@
 </head>
 <body>
 
-
 <div id="globalTip">
   <div id="tipContent"></div>
   <div class="tip-close-btn" onclick="hideTip()">タップして閉じる ✕</div>
@@ -354,7 +329,8 @@
 <div class="app-container">
   <div class="page-title">📊 損益分岐確認シート</div>
 
-  <div class="top-grid">
+  <!-- 基本情報入力 ＆ 操作説明（1つずつ縦並びで横幅完全一致） -->
+  <div class="vertical-stack">
     <div class="card">
       <div class="card-title">🟡 基本情報入力</div>
       <table class="form-table">
@@ -428,7 +404,8 @@
 
   <button class="btn-calc" onclick="calculate()">🔢 計算を更新する</button>
 
-  <div class="result-grid">
+  <!-- 結果セクションも1枚ずつ均一な幅で表示 -->
+  <div class="vertical-stack">
     <div class="card">
       <div class="section-label">🗑️ 残数廃棄パターン</div>
       <div class="result-table-wrap">
@@ -474,7 +451,6 @@
   </div>
 </div>
 
-
 <script>
   const $ = id => document.getElementById(id);
   const fmtR = v => isNaN(v) ? '—' : Math.round(v).toLocaleString();
@@ -492,7 +468,6 @@
     tipEl.style.display = 'none';
   }
 
-  // どのセルをタップしても位置や文字量によるサイズブレが生じない固定表示
   function showTip(html) {
     tipContent.innerHTML = html;
     tipEl.style.display = 'block';
@@ -516,7 +491,6 @@
     el.dataset.tipHtml = html;
   }
 
-  // タップ・クリックイベント
   document.addEventListener('click', e => {
     const el = e.target.closest('.has-tip');
     if (!el) {
@@ -543,10 +517,8 @@
     const finalProfit = grossProfit * storeRate;
 
     $('dispCost').textContent        = fmtR(cost);
-    $('dispTotalCost').textContent   = fmtR(totalCost);
-    $('dispTotalSell').textContent   = fmtR(totalSell);
-    $('dispStoreCharge').textContent = Math.round(100 - sejRate);
-    $('dispFinalProfit').textContent = fmtR(finalProfit) + ' 円';
+    $('dispTotalCost').textContent   = fmtR(totalCost);$('dispTotalSell').textContent   = fmtR(totalSell);
+    $('dispStoreCharge').textContent = Math.round(100 - sejRate);$('dispFinalProfit').textContent = fmtR(finalProfit) + ' 円';
     $('dispFinalProfit').style.color = finalProfit < 0 ? '#e53935' : '#1b5e20';
   }
 
